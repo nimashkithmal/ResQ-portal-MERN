@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
-// Base API URL (set REACT_APP_API_URL in frontend/.env to override)
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
 const ChatBot = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([
@@ -53,7 +49,8 @@ const ChatBot = () => {
                     return;
                 }
 
-                const checkRes = await fetch(`${API_BASE}/api/auth/check-existing`, {
+                // Proxy එක නිසා කෙලින්ම Path එක විතරක් දෙන්න
+                const checkRes = await fetch('/api/auth/check-existing', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ field: currentField, value: currentInput })
@@ -63,16 +60,13 @@ const ChatBot = () => {
                     const errorData = await checkRes.json();
                     
                     if (currentField === 'studentId') {
-                        // Student ID එකට පමණක් Block කර Restart Button එක පෙන්වයි
                         addBotMessage(`❌ ${errorData.message}`, true);
                         addBotMessage("It looks like you already have an account. Do you need any other help or would you like to try again?");
                         setIsBlocked(true); 
                     } else if (currentField === 'email') {
-                        // Email එක වැරදි නම් බ්ලොක් නොකර නැවත අසයි
                         addBotMessage(`❌ ${errorData.message}`, true);
                         addBotMessage("Please check your email or use a different email address to continue.");
                     } else if (currentField === 'nickname') {
-                        // Nickname එක වැරදි නම් බ්ලොක් නොකර නැවත අසයි
                         addBotMessage(`❌ Sorry! This nickname is already taken.`, true);
                         addBotMessage("Please choose a different nickname.");
                     }
@@ -86,7 +80,8 @@ const ChatBot = () => {
             setFormData(updatedFormData);
 
             if (currentField === 'password') {
-                const res = await fetch(`${API_BASE}/api/auth/register`, {
+                // Register fetch එකත් අප්ඩේට් කළා
+                const res = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedFormData)
@@ -100,7 +95,7 @@ const ChatBot = () => {
                 setStep(step + 1);
             }
         } catch (err) {
-            addBotMessage("❌ Connection error.", true);
+            addBotMessage("❌ Connection error. Backend එක දුවනවද බලන්න.", true);
         } finally {
             setLoading(false);
         }

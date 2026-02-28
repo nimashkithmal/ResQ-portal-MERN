@@ -1,13 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+// const cors = require('cors'); // අනවශ්‍යයි, මම මේක comment කළා (ඕනනම් අයින් කරලා දාන්න)
 require('dotenv').config();
 
 const app = express();
 
 // --- Middleware ---
-// CORS අවසර ලබා දීම (Frontend එකට Backend එක එක්ක කතා කරන්න ඉඩ දෙනවා)
-app.use(cors()); 
+// app.use(cors()); // Proxy එක පාවිච්චි කරන නිසා CORS දැන් අත්‍යවශ්‍ය නැහැ
 app.use(express.json());
 
 // --- Routes ---
@@ -39,8 +38,7 @@ app.get('/', (req, res) => {
 });
 
 // --- Server Startup ---
-// server.js එකේ අන්තිම හරිය
-const PORT = process.env.PORT || 5000; // .env එකේ නැත්නම් විතරක් 5000 ගනී
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
