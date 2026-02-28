@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
+// Base API URL (set REACT_APP_API_URL in frontend/.env to override)
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const ChatBot = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([
@@ -49,7 +53,7 @@ const ChatBot = () => {
                     return;
                 }
 
-                const checkRes = await fetch('http://localhost:5000/api/auth/check-existing', {
+                const checkRes = await fetch(`${API_BASE}/api/auth/check-existing`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ field: currentField, value: currentInput })
@@ -82,7 +86,7 @@ const ChatBot = () => {
             setFormData(updatedFormData);
 
             if (currentField === 'password') {
-                const res = await fetch('http://localhost:5000/api/auth/register', {
+                const res = await fetch(`${API_BASE}/api/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedFormData)
